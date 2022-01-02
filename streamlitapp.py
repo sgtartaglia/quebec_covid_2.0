@@ -71,7 +71,6 @@ def plot_Graph(data):
         col2.write('% of ' + select_data + ' Fully vaccinated' + ': ' + str(data.iloc[-1]['Vacciné 2 doses']/data.iloc[-1]['Total']*100)+ '%')
         col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Vacciné 2 doses']/6872850*100)+ '%')
         st.pyplot(fig)
-        st.write(select_df +' for '+ age_choice +' last 5 days')
     else:
         fig, ax = plt.subplots()
 
