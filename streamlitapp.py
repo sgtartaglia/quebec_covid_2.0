@@ -67,8 +67,8 @@ def plot_Graph(data):
         plt.legend()
         col2.write('Total ' + select_data + ' for ' + str(data.iloc[-1]['Date']) + ': ' + str(data.iloc[-1]['Total']))
         col2.write('% of ' + select_data  + ' unvaccinated' +': ' + str(data.iloc[-1]['Non-vacciné']/data.iloc[-1]['Total']*100) + '%')
-        col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Non-vacciné']/1610000*100) + '%')
         col2.write('% of ' + select_data + ' Fully vaccinated' + ': ' + str(data.iloc[-1]['Vacciné 2 doses']/data.iloc[-1]['Total']*100)+ '%')
+        col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Non-vacciné']/1610000*100) + '%')
         col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Vacciné 2 doses']/6872850*100)+ '%')
         st.pyplot(fig)
     else:
@@ -83,10 +83,9 @@ def plot_Graph(data):
         plt.legend()
         col2.write('Total ' + select_data + ' for ' + str(data.iloc[-1]['Date']) + ': ' + str(data.iloc[-1]['Total']))
         col2.write('% of ' + select_data  + ' Unvaccinated' +': ' + str(data.iloc[-1]['Non-vacciné']/data.iloc[-1]['Total']*100) + '%')
-        col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Non-vacciné']/1610000*100) + '%')
         col2.write('% of ' + select_data + ' Fully Vaccinated' + ': ' + str(data.iloc[-1]['Vacciné 2 doses']/data.iloc[-1]['Total']*100)+ '%')
+        col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Non-vacciné']/1610000*100) + '%')
         col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Vacciné 2 doses']/6872850*100)+ '%')
-
 
         st.pyplot(fig)
 
