@@ -1,5 +1,6 @@
 # quebec_covid_webapp
-Webapp to track covid cases in Quebec
+##Webapp to track covid cases and hospitalization by vaccine status in Quebec
+### URL: https://qc-covid-data.herokuapp.com/
 
 This is a simple Web app I created with the Streamlit library to access covid data from the following sources:
 
