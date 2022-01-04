@@ -19,20 +19,23 @@ st.write("""
 """)
 col1, col2 = st.columns([2,2])
 
-with st.form(key='my_key'):
-    select_data = col1.selectbox('Select Data', ['Cases','Hospitalizations','Both'])
-    select_age = col1.selectbox('Select Age Group',['Over 50', 'Under 50', 'All Ages'])
-    select_dates = col1.selectbox('Date Range',['All Time ', 'Last 30 days'])
+
+select_data = col1.selectbox('Select Data', ['Cases','Hospitalizations','Both'])
+select_age = col1.selectbox('Select Age Group',['Over 50', 'Under 50', 'All Ages'])
+select_dates = col1.selectbox('Date Range',['All Time ', 'Last 30 Days'])
 
 
 def dated(select_dates):
-    if select_dates == 'Last 30 Days':
+    if select_dates == 'Last 30 Days': 
         return -30
     else:
-        return
+        return 0
 
-@st.cache(suppress_st_warning=True)
-def transform_df(df='All',age='All',timeframe=0):
+print(dated('Last 30 Days'))
+date_choice = int(dated(select_dates))
+
+
+def transform_df(df,age,timeframe=-30):
     if select_age == 'All Ages':
         df['Age'] = df['Age'].replace({'0-9 ans': 'Under 50','10-19 ans': 'Under 50','20-29 ans': 'Under 50','30-39 ans': 'Under 50','40-49 ans': 'Under 50'})
         df['Age'] = df['Age'].replace({'50-59 ans': 'Over 50','60-69 ans': 'Over 50','70-79 ans': 'Over 50','80-89 ans': 'Over 50','90 ans et plus': 'Over 50'})
@@ -49,45 +52,28 @@ def transform_df(df='All',age='All',timeframe=0):
         df_pivot = pd.pivot_table(data=df, index= [df.index,'Age'] ,columns='Statut_Vaccinal', values='Occurences', aggfunc=np.sum).reset_index().rename_axis(None,axis=1)
         df_pivot['Total'] = df_pivot['Non-vacciné'] + df_pivot['Vacciné 1 dose'] + df_pivot['Vacciné 2 doses']
         df_output = df_pivot[df_pivot['Age'] == age]
-        df_output = df_output.iloc[timeframe:]
+        df_output = df_output.iloc[int(timeframe):]
 
    
     return df_output
 
 def plot_Graph(data):
-    if select_age == 'All Ages':
-        fig, ax = plt.subplots()
 
-        ax.plot(data['Date'],data['Non-vacciné'], label='Unvaccinated', color='blue')
-        ax.set_ylabel('Cases', color='blue')
+    fig, ax = plt.subplots()
 
-        ax.plot(data['Date'],data['Vacciné 1 dose'], label = '1 Dose')
-        ax.plot(data['Date'],data['Vacciné 2 doses'], label = '2 Dose')
-        plt.xticks(rotation=90)
-        plt.legend()
-        col2.write('Total ' + select_data + ' for ' + str(data.iloc[-1]['Date']) + ': ' + str(data.iloc[-1]['Total']))
-        col2.write('% of ' + select_data  + ' unvaccinated' +': ' + str(data.iloc[-1]['Non-vacciné']/data.iloc[-1]['Total']*100) + '%')
-        col2.write('% of ' + select_data + ' Fully vaccinated' + ': ' + str(data.iloc[-1]['Vacciné 2 doses']/data.iloc[-1]['Total']*100)+ '%')
-        col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Non-vacciné']/1610000*100) + '%')
-        col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Vacciné 2 doses']/6872850*100)+ '%')
-        st.pyplot(fig)
-    else:
-        fig, ax = plt.subplots()
+    ax.plot(data['Date'],data['Non-vacciné'], label='Unvaccinated', color='blue')
+    ax.set_ylabel('Cases', color='blue')
 
-        ax.plot(data['Date'],data['Non-vacciné'], label='Unvaccinated', color='blue')
-        ax.set_ylabel('Cases', color='blue')
-
-        ax.plot(data['Date'],data['Vacciné 1 dose'], label = '1 Dose')
-        ax.plot(data['Date'],data['Vacciné 2 doses'], label = '2 Dose')
-        plt.xticks(rotation=90)
-        plt.legend()
-        col2.write('Total ' + select_data + ' for ' + str(data.iloc[-1]['Date']) + ': ' + str(data.iloc[-1]['Total']))
-        col2.write('% of ' + select_data  + ' Unvaccinated' +': ' + str(data.iloc[-1]['Non-vacciné']/data.iloc[-1]['Total']*100) + '%')
-        col2.write('% of ' + select_data + ' Fully Vaccinated' + ': ' + str(data.iloc[-1]['Vacciné 2 doses']/data.iloc[-1]['Total']*100)+ '%')
-        col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Non-vacciné']/1610000*100) + '%')
-        col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Vacciné 2 doses']/6872850*100)+ '%')
-
-        st.pyplot(fig)
+    ax.plot(data['Date'],data['Vacciné 1 dose'], label = '1 Dose')
+    ax.plot(data['Date'],data['Vacciné 2 doses'], label = '2 Dose')
+    plt.xticks(rotation=90)
+    plt.legend()
+    col2.write('Total ' + select_data + ' for ' + str(data.iloc[-1]['Date']) + ': ' + str(data.iloc[-1]['Total']))
+    col2.write('% of ' + select_data  + ' unvaccinated' +': ' + str(data.iloc[-1]['Non-vacciné']/data.iloc[-1]['Total']*100) + '%')
+    col2.write('% of ' + select_data + ' Fully vaccinated' + ': ' + str(data.iloc[-1]['Vacciné 2 doses']/data.iloc[-1]['Total']*100)+ '%')
+    col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Non-vacciné']/1610000*100) + '%')
+    col2.write('% of ' + select_data + ' reltive to population' + ': ' + str(data.iloc[-1]['Vacciné 2 doses']/6872850*100)+ '%')
+    st.pyplot(fig)
 
 def plot_2_graphs():
     data = transform_df(df_cases,select_age,dated(select_dates))
